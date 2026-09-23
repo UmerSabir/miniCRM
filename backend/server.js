@@ -18,16 +18,6 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/leads', require('./routes/leadRoutes'));
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({
-    message: err.message || 'Internal server error',
-  });
-});
-
 let isConnected = false;
 
 async function connectDB() {
@@ -49,6 +39,16 @@ app.use(async (req, res, next) => {
   } catch (err) {
     res.status(500).json({ message: 'Database connection failed' });
   }
+});
+
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/leads', require('./routes/leadRoutes'));
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({
+    message: err.message || 'Internal server error',
+  });
 });
 
 if (process.env.NODE_ENV !== 'production') {
